@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Interactive → GIF</title>
+<link rel="stylesheet" href="./styles.css" />
+<style>
+
+
+
+  :root{ --accent:#DDFF00; --radius:18px; --btn:#242424; --btnActive:#5942D9; }
+  body{
+    margin:0; min-height:100vh;
+    background:linear-gradient(180deg,var(--accent) 0%,#f4ffd1 70%,#fdfdfd 100%);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans KR",sans-serif;
+  }
+  .back-link{ position:fixed; top:22px; right:28px; z-index:10;
+    font-weight:800; text-decoration:none; color:#222;
+    background:rgba(255,255,255,.82); padding:8px 12px; border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.12); }
+  .page{
+    max-width:1600px; margin:0 auto;
+    padding:clamp(28px,6vw,64px) clamp(18px,4vw,40px) 64px;
+    display:grid; gap:24px; grid-template-columns: 1fr 420px; align-items:start;
+  }
+  .card{ background:#fff; border-radius:var(--radius); box-shadow:0 10px 24px rgba(0,0,0,.18);
+         position:relative; overflow:hidden; }
+  .dotStage{
+    background:
+      radial-gradient(circle at 1px 1px, rgba(0,0,0,.08) 1px, transparent 1px) 0 0/10px 10px,
+      radial-gradient(circle at 1px 1px, rgba(0,0,0,.06) 1px, transparent 1px) 5px 5px/10px 10px,
+      #fff;
+  }
+  .rightCol{ display:grid; gap:18px; grid-auto-rows:min-content; }
+  /* ⬇️ Pixi/Matter 두 캔버스를 겹치기 (무한 높이 방지) */
+  .bounceStage{
+    position:relative;
+    min-height:360px;
+    background:#fff;
+  }
+  .bounceStage > canvas{
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+    display:block;
+  }
+  .controls{ background:#101010; color:#eee; border-radius:var(--radius);
+    box-shadow:0 10px 24px rgba(0,0,0,.18); padding:16px; display:grid; gap:12px; }
+  .row{ display:grid; grid-template-columns:140px 1fr; gap:10px; align-items:center; }
+/* 공통 기본 */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  background: transparent;
+  outline: none;
+}
+
+/* 크롬/사파리 */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    #5942D9 var(--val, 50%),
+    #242423 var(--val, 50%)
+  );
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #5942D9;
+  cursor: pointer;
+  margin-top: -5px; /* 가운데 정렬 */
+  box-shadow: 0 0 0 2px #101010; /* 배경(검은색 카드)과 구분 */
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 4px;
+  background: #242423; /* 전체 배경 */
+}
+input[type="range"]::-moz-range-progress {
+  height: 6px;
+  border-radius: 4px;
+  background: #5942D9; /* 채워진 부분 */
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #5942D9;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 0 2px #101010;
+}
+
+/* Edge/IE */
+input[type="range"]::-ms-track {
+  height: 6px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type="range"]::-ms-fill-lower {
+  background: #5942D9;
+  border-radius: 4px;
+}
+input[type="range"]::-ms-fill-upper {
+  background: #242423;
+  border-radius: 4px;
+}
+input[type="range"]::-ms-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #5942D9;
+  cursor: pointer;
+  border: none;
+}
+
+  .btn{ display:inline-flex; align-items:center; gap:8px; border:none; cursor:pointer; font-weight:800;
+    padding:10px 14px; border-radius:12px; background:var(--btn); color:#fff; transition:background .12s ease; }
+  .btn.active{ background:var(--btnActive); }
+  canvas{ display:block; width:100%; height:100%; }
+
+.row {
+      position: relative;
+    }
+    .row label {
+      position: relative;
+      cursor: help;
+    }
+    .tooltip {
+      position: absolute;
+      left: 0;
+      bottom: 120%;
+      background: #242423;
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(4px);
+      pointer-events: none;
+      transition: all 0.18s ease;
+      z-index: 50;
+    }
+    .row label:hover .tooltip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+.rec-indicator {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: red;
+  opacity: 0;
+  z-index: 9999;
+}
+.rec-indicator.blinking {
+  animation: blink 1s infinite;
+  opacity: 1;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+
+</style>
+
+<!-- CDNs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js" defer></script>
+
+<!-- 앱 코드 분리 -->
+<script src="./left-app.js" defer></script>
+<script src="./right-app.js" defer></script>
+</head>
+<body>
+  <a class="back-link" href="./index.html">← back</a>
+
+  <div class="page">
+    <section class="card dotStage" id="puddingStage"></section>
+
+    <div class="rightCol" id="rightCol">
+      <section class="card bounceStage" id="ballStage"></section>
+
+      <section class="controls">
+        <div style="display:flex; gap:8px; margin-bottom:6px;">
+          <button class="btn" id="btnUpload">upload JPG/PNG</button>
+          <input id="file" type="file" accept=".jpg,.jpeg,.png" hidden>
+          <button class="btn" id="btnTest">spawn circles</button>
+          <button class="btn" id="btnDownload">download GIF</button>
+        </div>
+        <div class="row"><label> bounce (탄성)
+    <span class="tooltip">(왼)출렁 (오)탄성</span></label>
+          <input id="ctlBounce" type="range" min="0" max="1" step="0.01" value="0.6">
+        </div>
+        <div class="row"><label>stiffness (빡빡함)
+         <span class="tooltip">(왼)복원 (오)중력</span> </label>
+          <input id="ctlStiff" type="range" min="0.01" max="0.2" step="0.005" value="0.03">
+        </div>
+        <div class="row"><label>radius (반지름)
+         <span class="tooltip">(왼)크기 (오)X</span> </label>
+          <input id="ctlRadius" type="range" min="10" max="80" step="2" value="36">
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+  // 버튼 active 토글
+  document.addEventListener("DOMContentLoaded", () => {
+    const btns = document.querySelectorAll('.btn');
+    btns.forEach(b => b.addEventListener('click', () => {
+      btns.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    }));
+
+    // 🎨 슬라이더 채움 효과
+    const sliders = document.querySelectorAll('input[type="range"]');
+    sliders.forEach(slider => {
+      const update = () => {
+        const percent = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+        slider.style.setProperty('--val', percent + '%');
+      };
+      slider.addEventListener('input', update);
+      update(); // 초기값 반영
+    });
+  });
+
+  // 좌 높이 = 우 합
+  function syncHeight() {
+    const R=document.getElementById('rightCol'); 
+    const L=document.getElementById('puddingStage'); 
+    if(R&&L) L.style.minHeight=R.offsetHeight+'px';
+  }
+  window.addEventListener('resize', syncHeight);
+  window.addEventListener('load', syncHeight);
+</script>
+
+
+<!-- 🔴 빨간 점은 그대로 -->
+<div id="recIndicator" class="rec-indicator"></div>
+
+<!-- ✅ gif.js (전역) -->
+<script src="https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.js"></script>
+
+<!-- 🎥 녹화 모듈 -->
+<script type="module">
+  import { recordLeft } from "./left-rec.js";
+  // 오른쪽도 녹화할 땐 동적으로 import 함 (아래 try 블록 참고)
+
+  // ── 모달 스타일 (중복 .choice-mask 제거해서 한 번만!)
+  const style = document.createElement("style");
+  style.textContent = `
+    .choice-mask{
+      position:fixed; inset:0; z-index:9999;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.45); backdrop-filter:saturate(1.1) blur(2px);
+    }
+    .choice{
+      background:#101010; color:#fff;
+      border-radius:14px; padding:18px 16px; width:min(92vw,360px);
+      box-shadow:0 10px 24px rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .choice h3{ margin:0 0 12px; font-size:18px; font-weight:800; }
+    .choice section{ margin:14px 0; }
+    .choice label{ display:block; font-weight:700; margin-bottom:8px; opacity:.9; }
+    .choice p.sub{ margin:0 0 12px; font-size:13px; opacity:.8; white-space:pre-line; }
+    .m-btn{
+      appearance:none; border:0; border-radius:12px;
+      padding:10px 14px; font-weight:800; cursor:pointer;
+      transition: transform .06s ease, background .12s ease, opacity .15s ease, filter .15s ease;
+      color:#fff; background: var(--btn, #242423);
+    }
+    .m-btn:hover{ background: var(--btnActive, #5942D9); }
+    .m-btn:active{ transform: translateY(1px); }
+    .m-btn.active, .m-btn:focus-visible{ background: var(--btnActive, #5942D9); outline:none; }
+    .m-btn:disabled{ opacity:.5; cursor:not-allowed; }
+    .seg{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .row.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .row.grid2 .m-btn{ width:100%; }
+    .row.end{ display:flex; justify-content:flex-end; gap:10px; }
+  `;
+  document.head.appendChild(style);
+
+  function chooseRecordOptions(){
+    return new Promise(resolve => {
+      const mask = document.createElement("div");
+      mask.className = "choice-mask";
+
+      const box = document.createElement("div");
+      box.className = "choice";
+      box.innerHTML = `
+        <h3>레코더 옵션</h3>
+        <section>
+          <label>녹화</label>
+          <div class="seg">
+            <button class="m-btn opt" data-side="left">왼쪽</button>
+            <button class="m-btn opt" data-side="right">오른쪽</button>
+          </div>
+        </section>
+        <section>
+          <label>배경</label>
+          <p class="sub">투명은 크로마키(#00FF00)로 저장돼요.
+5초동안 움직여주세요.</p>
+          <div class="row grid2">
+            <button class="m-btn bg" data-bg="white">흰배경</button>
+            <button class="m-btn bg" data-bg="transparent">투명</button>
+          </div>
+        </section>
+        <div class="row end">
+          <button class="m-btn" data-act="cancel">취소</button>
+          <button class="m-btn" data-act="start" disabled>시작</button>
+        </div>
+      `;
+
+      mask.appendChild(box);
+      document.body.appendChild(mask);
+
+      let side = null, bg = null;
+      const startBtn = box.querySelector('[data-act="start"]');
+      const updateStart = () => {
+        const ok = !!(side && bg);
+        startBtn.disabled = !ok;
+        startBtn.classList.toggle("active", ok);
+      };
+
+      box.querySelectorAll(".opt").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          box.querySelectorAll(".opt").forEach(b=>b.classList.remove("active"));
+          btn.classList.add("active");
+          side = btn.dataset.side;
+          updateStart();
+        });
+      });
+      box.querySelectorAll(".bg").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          box.querySelectorAll(".bg").forEach(b=>b.classList.remove("active"));
+          btn.classList.add("active");
+          bg = btn.dataset.bg;
+          updateStart();
+        });
+      });
+
+      const done = (v)=>{ document.body.removeChild(mask); resolve(v); };
+      box.querySelector('[data-act="cancel"]').addEventListener("click", ()=>done(null));
+      startBtn.addEventListener("click", ()=>done({ side, transparent: (bg === "transparent") }));
+      mask.addEventListener("click", e => { if (e.target === mask) done(null); });
+      const onKey = e => { if (e.key === "Escape") { window.removeEventListener("keydown", onKey); done(null); } };
+      window.addEventListener("keydown", onKey);
+    });
+  }
+
+  window.addEventListener("load", () => {
+    const recordBtn = document.getElementById("btnDownload");
+    const indicator = document.getElementById("recIndicator");
+
+    recordBtn.addEventListener("click", async () => {
+      const choice = await chooseRecordOptions();
+      if (!choice) return;
+
+      const { side, transparent } = choice;
+      const common = {
+        transparent,
+        duration: 5000,
+        fps: 12,
+        scale: 0.5,
+        workerScript: './gif.worker.js'   // ← 로컬 워커
+      };
+
+      indicator.classList.add("blinking");
+      recordBtn.disabled = true;
+      try {
+        if (side === "left") {
+          await recordLeft(common);
+        } else {
+          const { recordRight } = await import("./right-rec.js");
+          await recordRight(common);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        indicator.classList.remove("blinking");
+        recordBtn.disabled = false;
+      }
+    });
+  });
+</script>
+
+</body>
+
+
+
+</html>
+
+
