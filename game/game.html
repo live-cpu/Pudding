@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Game | Jelly + Player</title>
+
+  <!-- Supabase 키 (main.js에서 읽음) -->
+  <script>
+    window.SUPABASE_URL = "https://dzztnkdcgrpqxfrxkyic.supabase.co";
+    window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6enRua2RjZ3JwcXhmcnhreWljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczMzg0MjksImV4cCI6MjA3MjkxNDQyOX0.DZU-b-5vbxgFE7lBCLJisHR9xW7jp0cVwnV2l6SWTJs";
+  </script>
+
+  <link rel="stylesheet" href="./game.css" />
+
+  <!-- 라이브러리: Pixi v7 / Matter.js / gif.js -->
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@7/dist/pixi.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+  <!-- (BODY 맨 끝) blob → main.js 순서로 딱 한 번만 -->
+
+
+
+</head>
+<body class="theme-sticker">
+
+
+
+
+  <!-- 헤더 -->
+  <header class="site-header">
+    <div class="container">
+      <a href="../index.html" class="logo"> JELLY</a>
+      <nav class="nav">
+        <a href="../index.html">Home</a>
+        <a href="../gif.html">Gif</a>
+        <a href="../licence.html">Licence</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 흘러가는 텍스트 -->
+
+  <!-- 숨겨진 파일 입력 -->
+  <input id="fileInput" type="file" accept="image/*" hidden />
+
+  <!-- 인트로 -->
+  <section class="intro">
+    <div class="intro-left">
+      <h2>BEST JELLY</h2>
+    </div>
+    <div class="intro-buttons">
+      <button id="btnUpload"   class="btn outline">업로드</button>
+      <button id="btnDownload" class="btn outline" disabled>다운로드</button>
+      <button id="btnStore"    class="btn outline" disabled>스토리지</button>
+      <button id="btnBgToggle" class="btn outline">배경</button>
+      <button id="btnDino"     class="btn outline">게임</button>
+    </div>
+  </section>
+
+  <!-- 좌/우 패널 -->
+  <div class="wrap">
+    <div class="row">
+      <section class="panel dot-paper">
+      <div id="leftMount" class="mount"></div>
+      <p class="hint">이미지 업로드 후 통통 튐</p>
+    </section>
+
+    <section class="panel">
+      <div id="rightMount" class="mount"></div>
+      <p class="hint">← → 이동, ↑/Space 점프</p>
+    </section>
+  </div>
+</div>
+
+<!-- 어워즈+순위 (리더보드) : wrap 안에 scoreboard 넣기 -->
+  <div class="wrap">
+    <div id="scoreboard"></div>
+  </div>
+
+  <!-- 갤러리 (그대로 유지) -->
+  <div id="gallery" style="padding:14px;"></div>
+
+
+  <!-- 레코더 옵션 모달 -->
+  <div id="recModal" class="modal hidden">
+    <div class="modal-card">
+      <h4>레코더 옵션</h4>
+
+      <div class="opt-group">
+        <div class="label">녹화</div>
+        <div class="row-buttons">
+          <button id="optSideLeft"  class="upload-btn">왼쪽</button>
+          <button id="optSideRight" class="upload-btn">오른쪽</button>
+        </div>
+      </div>
+ 
+      <div class="opt-group">
+        <div class="label">배경</div>
+        <div class="opt-desc">투명은 크로마키(#00FF00)로 저장돼요.<br/>5초 동안 움직여주세요.</div>
+        <div class="row-buttons">
+          <button id="optBgWhite"  class="upload-btn">흰배경</button>
+          <button id="optBgChroma" class="upload-btn">투명</button>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="recCancel" class="upload-btn">X</button>
+        <button id="recStart"  class="upload-btn">O</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 녹화 중 빨간 점 (id 중복 방지를 위해 여기 것만 남김) -->
+  <div id="recDot" class="rec-dot hidden" aria-label="recording"></div>
+
+  <!-- 엔트리 포인트 -->
+  <script type="module" src="./main.js"></script>
+
+  
+</body>
+</html>
