@@ -1,0 +1,108 @@
+// landingWave.js (FINAL: transparent waves over sticker grid)
+(() => {
+  'use strict';
+
+  const canvas = document.getElementById('wave-canvas');
+  if (!canvas) return;
+
+  // 2D 컨텍스트: 알파 ON (투명 배경)
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
+  // === Theme 색상 (CSS 변수 읽고, 없으면 기본값) ===
+  const root = getComputedStyle(document.body);
+  const INK   = root.getPropertyValue('--st-ink')  ?.trim() || '#4b2e1a';
+  const LINE  = root.getPropertyValue('--st-line') ?.trim() || '#6b4023';
+  const ACC   = root.getPropertyValue('--st-orange')?.trim() || '#f6a565';
+
+  // === 사이즈 & DPR 스케일 ===
+  let w = 0, h = 0, dpr = 1;
+  function resize() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    w = window.innerWidth;
+    h = window.innerHeight;
+
+    // 캔버스 해상도(DPR) 반영 + 논리좌표는 CSS px로
+    canvas.width  = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // reset
+    ctx.scale(dpr, dpr);                 // 이제부터 px 기준으로 그리기
+  }
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+
+  // === 파도 파라미터 ===
+  let t = 0;                          // 시간
+  const WAVELEN  = 220;               // 파장(px)
+  const SPEED    = 0.6;               // 속도(배속)
+  const AMP_BASE = Math.max(16, h * 0.06); // 기본 진폭
+  const LAYERS   = [
+    { color: LINE, width: 2.0, alpha: 0.28, amp: 1.00, phase: 0.0 },
+    { color: ACC,  width: 2.5, alpha: 0.22, amp: 0.75, phase: Math.PI / 3 },
+    { color: INK,  width: 1.5, alpha: 0.18, amp: 0.55, phase: Math.PI * 0.85 }
+  ];
+
+  // 부드러운 곡선 그리기
+  function drawWave({ color, width, alpha, amp, phase }) {
+    const A = AMP_BASE * amp;
+    const mid = h * 0.55; // 중앙 기준선
+
+    ctx.beginPath();
+    for (let x = 0; x <= w; x += 2) {
+      // 살짝 비틀기(세로 그라데이션 느낌)
+      const y =
+        mid +
+        A * Math.sin((x / WAVELEN) * (Math.PI * 2) + t * SPEED + phase) *
+        (0.9 + 0.1 * Math.sin((x / (WAVELEN * 2)) + t * 0.25));
+
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth   = width;
+    ctx.lineJoin    = 'round';
+    ctx.lineCap     = 'round';
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // === 루프 ===
+  let rafId = 0, last = performance.now();
+  function frame(now) {
+    const dt = Math.min(40, now - last) / 1000; // 안전 dt
+    last = now;
+    t += dt;
+
+    // ★★★ 절대 배경을 채우지 말 것! (격자 가리니까)
+    ctx.clearRect(0, 0, w, h); // 투명하게 지우기
+
+    // 레이어 파도들
+    for (let i = 0; i < LAYERS.length; i++) {
+      drawWave(LAYERS[i]);
+    }
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  // 탭 비활성화 시 정지/재개 (배터리 절약)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      cancelAnimationFrame(rafId);
+    } else {
+      last = performance.now();
+      rafId = requestAnimationFrame(frame);
+    }
+  });
+
+  rafId = requestAnimationFrame(frame);
+
+  // 디버그(원하면 켜기)
+  // window.__waveDebug = { setSpeed: v => (SPEED = v) };
+})();
+
+
+#wave-canvas{ background: transparent !important; }
