@@ -1,0 +1,346 @@
+:root {
+  --accent:#DDFF00;
+  --ink:#111;
+  --bg:#0e0e0e;
+
+  /* 폰트 사이즈 규격 */
+  --fs-xl: 24px;
+  --fs-md: 16px;
+  --fs-sm: 14px;
+
+  /* 반응형 padding 규칙 */
+  --page-padding-x: clamp(18px, 4vw, 40px);
+  --page-padding-y: clamp(28px, 6vw, 64px);
+}
+
+* { box-sizing: border-box; }
+
+html,body { height:100%; }
+
+body {
+  margin:0;
+  color: var(--ink);
+  font-family: "Noto Sans KR", sans-serif;
+  background: linear-gradient(180deg, var(--accent) 0%, #e9ff7a 40%, #f6f8f2 100%);
+}
+
+/* 네비게이션 바 */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 56px;
+  background: linear-gradient(90deg, #ddff00 0%, #f4ffd1 100%);
+  z-index: 1000;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.navbar .inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--page-padding-x);  /* ✅ 본문과 동일한 반응형 좌우 여백 */
+}
+
+.nav-left .logo {
+  font-weight: 800;
+  font-size: 18px;
+  color: #242423;
+  user-select: none;
+}
+
+.nav-right {
+  display: flex;
+  gap: 28px;
+}
+
+.nav-right a {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  color: #242423;
+  transition: color 0.2s ease;
+}
+.nav-right a:hover { color: #5942D9; }
+
+/* 하단 크레딧 */
+.credit {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: #444;
+  background: rgba(0,0,0,.06);
+  padding: 8px 10px;
+}
+
+
+/* 본문 wrapper */
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: calc(56px + 14px); /* 네비바 높이 + 간격 */
+  padding-left: var(--page-padding-x);
+  padding-right: var(--page-padding-x);
+}
+
+/* 페이지 레이아웃 */
+
+/* 모든 버튼 계열은 동일한 폰트 사용 */
+button, .control-btn, .btn {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ===== GIF page — Sticker Theme ===== */
+
+/* 팔레트 + 공통 변수 */
+body.theme-sticker{
+  --st-ink:#4b2e1a; --st-line:#6b4023; --st-bg:#f7dca1; --st-paper:#fff0c9;
+  --st-aqua:#cfe9e6; --st-orange:#f6a565; --st-shadow:rgba(0,0,0,.08);
+
+  --grid-size:56px; --grid-thin:rgba(107,64,35,.10); --grid-bold:rgba(107,64,35,.16);
+}
+
+/* 배경 격자 */
+
+@media (max-width:900px){ body.theme-sticker{ --grid-size:42px; } }
+
+/* 네비게이션(기존 .navbar 그대로 사용) */
+body.theme-sticker .navbar{
+  position:fixed; top:10px; left:10px; right:10px; height:56px !important;
+  background:var(--st-paper) !important;
+  border:2px solid var(--st-line); border-radius:14px;
+  box-shadow:0 4px 0 var(--st-line), 0 10px 12px var(--st-shadow);
+  z-index:1000;
+}
+body.theme-sticker .navbar .inner{ height:100%; }
+body.theme-sticker .nav-left .logo,
+body.theme-sticker .nav-right a{ color:var(--st-ink) !important; font-weight:800; }
+body.theme-sticker .nav-right a:hover{ background:rgba(0,0,0,.06); border-radius:8px; padding:4px 6px; }
+
+/* 네비가 위로 올라가서 본문 패딩 보정 */
+body.theme-sticker .wrapper,
+body.theme-sticker .page{ padding-top: calc(56px + 24px) !important; }
+
+/* 카드/스테이지/컨트롤 공통 */
+body.theme-sticker .card,
+body.theme-sticker .controls{
+  background:var(--st-paper) !important;
+  border:2px solid var(--st-line) !important;
+  border-radius:14px !important;
+  box-shadow:0 4px 0 var(--st-line), 0 10px 12px var(--st-shadow) !important;
+}
+
+/* 점자무늬 무대 */
+body.theme-sticker .dotStage{
+  background:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,.08) 1px, transparent 1px) 0 0/10px 10px,
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,.06) 1px, transparent 1px) 5px 5px/10px 10px,
+    var(--st-paper) !important;
+}
+
+/* 오른쪽 물리 스테이지 */
+body.theme-sticker .bounceStage{ background:var(--st-paper) !important; position:relative; min-height:360px; }
+body.theme-sticker .bounceStage>canvas{ position:absolute !important; inset:0 !important; width:100%!important; height:100%!important; }
+
+/* 버튼 */
+body.theme-sticker .btn{
+  appearance:none; border:2px solid var(--st-line);
+  border-radius:14px; padding:10px 14px;
+  background:#ffe7c4; color:var(--st-ink); font-weight:800; cursor:pointer;
+  box-shadow:0 4px 0 var(--st-line), 0 10px 12px var(--st-shadow);
+  transition:transform .03s ease, background .15s ease, color .15s ease;
+}
+body.theme-sticker .btn:hover{ background:#f5c987; color:var(--st-ink); }
+body.theme-sticker .btn.active{ background:var(--st-orange); color:#fff; }
+body.theme-sticker .btn:active{ transform:translateY(1px); }
+
+/* 슬라이더를 스티커 팔레트로 */
+body.theme-sticker input[type="range"]{ appearance:none; width:100%; height:6px; border-radius:4px; background:transparent; }
+body.theme-sticker input[type="range"]::-webkit-slider-runnable-track{
+  height:6px; border-radius:4px;
+  background: linear-gradient(to right, var(--st-orange) var(--val,50%), var(--st-line) var(--val,50%));
+}
+body.theme-sticker input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+  background: var(--st-orange); margin-top:-5px; box-shadow:0 0 0 2px var(--st-paper);
+}
+body.theme-sticker input[type="range"]::-moz-range-track{ height:6px; border-radius:4px; background:var(--st-line); }
+body.theme-sticker input[type="range"]::-moz-range-progress{ height:6px; border-radius:4px; background:var(--st-orange); }
+body.theme-sticker input[type="range"]::-moz-range-thumb{
+  width:16px; height:16px; border-radius:50%; background:var(--st-orange); border:none; box-shadow:0 0 0 2px var(--st-paper);
+}
+
+/* 툴팁 */
+body.theme-sticker .tooltip{
+  background: var(--st-line) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+/* 레코딩 인디케이터(빨간 점) */
+body.theme-sticker #recIndicator{
+  position: fixed !important;
+  top: 14px !important; right: 16px !important;
+  width:12px; height:12px; border-radius:50%;
+  background:#ff3b30; box-shadow:0 0 0 3px rgba(240,124,104,.25);
+  z-index:2147483647 !important;
+}
+body.theme-sticker #recIndicator.blinking{ animation: blink 1s infinite; }
+
+/* 선택 모달(chooseRecordOptions)도 스티커화 */
+body.theme-sticker .choice-mask{ background:rgba(0,0,0,.25) !important; }
+body.theme-sticker .choice{
+  background:var(--st-paper) !important; color:var(--st-ink) !important;
+  border:2px solid var(--st-line) !important; border-radius:14px !important;
+  box-shadow:0 4px 0 var(--st-line), 0 10px 12px var(--st-shadow) !important;
+}
+body.theme-sticker .choice h3{ color:var(--st-ink) !important; }
+body.theme-sticker .choice .m-btn{
+  background:#ffe7c4 !important; color:var(--st-ink) !important;
+  border:2px solid var(--st-line) !important; border-radius:14px !important; font-weight:800 !important;
+  box-shadow:0 4px 0 var(--st-line), 0 10px 12px var(--st-shadow) !important;
+}
+body.theme-sticker .choice .m-btn:hover,
+body.theme-sticker .choice .m-btn.active{ background:var(--st-orange) !important; color:#fff !important; }
+
+/* === GIF Controls: 텍스트 갈색 + 점자 격자 배경 === */
+body.theme-sticker .controls{
+  /* 종이색 + 작은 도트 격자 */
+  background:
+    radial-gradient(circle at 1px 1px, rgba(107,64,35,.08) 1px, transparent 1px) 0 0/12px 12px,
+    radial-gradient(circle at 1px 1px, rgba(107,64,35,.06) 1px, transparent 1px) 6px 6px/12px 12px,
+    var(--st-paper) !important;
+  border: 2px solid var(--st-line) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 0 var(--st-line), 0 10px 12px var(--st-shadow) !important;
+  color: var(--st-ink) !important;   /* ← 다크테마의 #eee 덮기 */
+}
+
+/* 레이블 색/두께 선명하게 */
+body.theme-sticker .controls .row label{
+  color: var(--st-ink) !important;
+  font-weight: 800;
+  opacity: 1 !important;
+}
+
+/* 슬라이더 툴팁도 테마 색으로 */
+body.theme-sticker .controls .tooltip{
+  background: var(--st-line) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+/* === Global Sticker Grid BG for GIF page === */
+body.theme-sticker{
+  /* 색/간격 */
+  --st-bg:    #f7dca1;                    /* 바탕 */
+  --grid-size: 56px;                      /* 칸 크기 */
+  --grid-thin: rgba(107,64,35,.10);       /* 얇은 선 */
+  --grid-bold: rgba(107,64,35,.16);       /* 4칸마다 굵은 선 */
+
+  /* 격자 (얇은 가/세 + 굵은 가/세 + 바탕색) */
+  background:
+    repeating-linear-gradient(  0deg, transparent 0 calc(var(--grid-size) - 1px), var(--grid-thin) calc(var(--grid-size) - 1px) var(--grid-size) ),
+    repeating-linear-gradient( 90deg, transparent 0 calc(var(--grid-size) - 1px), var(--grid-thin) calc(var(--grid-size) - 1px) var(--grid-size) ),
+    repeating-linear-gradient(  0deg, transparent 0 calc(var(--grid-size)*4 - 2px), var(--grid-bold) calc(var(--grid-size)*4 - 2px) calc(var(--grid-size)*4) ),
+    repeating-linear-gradient( 90deg, transparent 0 calc(var(--grid-size)*4 - 2px), var(--grid-bold) calc(var(--grid-size)*4 - 2px) calc(var(--grid-size)*4) ),
+    var(--st-bg) !important;              /* ← 기존 그라디언트 덮기 */
+  color: #4b2e1a;                          /* 본문 글자색도 테마에 맞게 */
+}
+@media (max-width: 900px){
+  body.theme-sticker{ --grid-size: 42px; } /* 모바일은 촘촘히 */
+}
+
+/* === Global Pudding Cursor ========================= */
+/* SVG 데이터 URI로 이모지 🍮를 커서 이미지로 사용 */
+:root{
+  --pudding-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext x='16' y='24' font-size='28' text-anchor='middle'%3E%F0%9F%8D%AE%3C/text%3E%3C/svg%3E");
+}
+
+/* 기본 커서: 모든 요소에 적용 (이전 cursor:none 등을 덮어쓰기 위해 !important) */
+html, body, body *{
+  cursor: var(--pudding-cursor) 8 8, auto !important; /* 8 8 = 핫스팟(정중앙 살짝 위) */
+}
+
+/* 클릭 가능한 요소들도 같은 커서 유지 (이미지가 안 뜨면 pointer로 폴백) */
+a, button, .btn, [role="button"], label, input[type="button"], input[type="submit"]{
+  cursor: var(--pudding-cursor) 8 8, pointer !important;
+}
+
+/* 텍스트 입력창은 I-beam 유지(원하면 주석 처리) */
+input[type="text"], input[type="search"], input[type="password"], textarea{
+  cursor: text !important;
+}
+
+/* 드래그 핸들 등 특별한 경우 예시
+   input[type="range"]{ cursor: default !important; } */
+
+
+
+/* 기본 PC 레이아웃 (3열) */
+/* --- GIF page 전용 레이아웃 --- */
+
+/* PC: a(left) | b(right) */
+.page{
+  display:grid;
+  grid-template-columns: 1fr 420px;
+  grid-template-areas: "stage right";   /* ← 배치 정의 */
+  gap:24px;
+  align-items:start;
+}
+#puddingStage{ grid-area: stage; }
+.rightCol    { grid-area: right; }
+
+/* 모바일: a가 위, b가 아래로 쌓기 */
+@media (max-width: 900px){
+  .page{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "stage"
+      "right";
+  }
+}
+
+/* === 모바일: 중앙 1컬럼 + 좌우 대칭 여백, 오버플로우 방지 === */
+@media (max-width: 900px){
+  :root{
+    /* 원하는 값으로 조절 */
+    --col-max: 560px;
+
+    /* 노치/안전영역 포함 좌우 여백(같은 기준점!) */
+    --gL: max(16px, env(safe-area-inset-left));
+    --gR: max(16px, env(safe-area-inset-right));
+  }
+
+  .page{
+    /* HTML <style>의 clamp 패딩을 덮어씀 */
+    padding-left:  var(--gL) !important;
+    padding-right: var(--gR) !important;
+
+    /* 한 개 트랙을 가운데 놓고, 트랙폭 = 화면폭 - 좌우여백 */
+    grid-template-columns: min(var(--col-max), calc(100vw - var(--gL) - var(--gR))) !important;
+    justify-content: center; /* 트랙 자체를 중앙 배치 */
+
+    /* 혹시 남은 제약 제거 */
+    max-width: none !important;
+    margin-left: auto;
+    margin-right: auto;
+    row-gap: 18px;
+    box-sizing: border-box;
+  }
+
+  /* 내부 카드들은 트랙폭을 꽉 채움 */
+  .page > *{
+    width: 100%;
+    margin-inline: 0;
+  }
+}
+
+
+
+
+

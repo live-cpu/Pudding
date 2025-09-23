@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-81LZPG8E9R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-81LZPG8E9R');
+  </script>
+  
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🍮PJELLY</title>
+
+  <link rel="stylesheet" href="landing.css" />
+  <link rel="stylesheet" href="landingWave.css" />
+</head>
+<body class="theme-sticker">
+
+  <!-- 👇 Wave 배경 -->
+  <canvas id="wave-canvas"></canvas>
+
+  <!-- 👇 Pixi Jelly 씬 올라가는 영역 -->
+  <main class="landing">
+    <h1 id="title" class="interactive-title" aria-label="🍮PJELLY 🍮">INTERACTIVE</h1>
+    <nav class="landing-nav">
+      <a class="nav-link" href="./gif.html">gif</a>
+      <a class="nav-link" href="game/game.html">game</a>
+    </nav>
+    <footer class="credit">@hobby@milkyatelier.quest</footer>
+  </main>
+
+  <!-- PixiJS Jelly 효과 -->
+  <script src="./main.js"></script>
+
+  <!-- Wave 효과 -->
+  <script src="landingWave.js"></script>
+</body>
+</html>
