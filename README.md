@@ -1,7 +1,7 @@
 # Pudding
 
 you can create pudding.gif as you want 
-the code is made by chat.gpt - code is not organized
+<br> the code is made by chat.gpt - code is not organized
 
 [https://live-cpu.github.io/Pudding/]   
 
