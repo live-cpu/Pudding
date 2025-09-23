@@ -3,6 +3,8 @@
 you can create pudding.gif as you want 
 the code is made by chat.gpt - code is not organized
 
+[https://live-cpu.github.io/Pudding/]   
+
 ![jelly (1)](https://github.com/user-attachments/assets/f93c47a6-0037-4419-a84f-9f8c2362a9aa)
 ![left](https://github.com/user-attachments/assets/2f7be159-9113-4387-9e5a-30ec256ed5b8)
 ![player (3)](https://github.com/user-attachments/assets/0f502bb1-d60f-4657-a5ab-0b8c832584ec)
