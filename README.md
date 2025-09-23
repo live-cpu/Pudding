@@ -2,7 +2,7 @@
 
 you can create pudding.gif as you want 
 <br> the code is made by chat.gpt - code is not organized
-<br> 젤리효과, 푸딩젤리gif, 젤리효과커스텀, 젤리, 푸딩효과, 푸딩젤리, 푸딩디노게임, 젤리, 바이브코딩, Jelly effect, pudding jelly gif, jelly effect custom, jelly, pudding effect, pudding jelly, pudding dinogame, jelly, vibe coding
+<br><br> 젤리효과, 푸딩젤리gif, 젤리효과커스텀, 젤리, 푸딩효과, 푸딩젤리, 푸딩디노게임, 젤리, 바이브코딩, Jelly effect, pudding jelly gif, jelly effect custom, jelly, pudding effect, pudding jelly, pudding dinogame, jelly, vibe coding
 
 [https://live-cpu.github.io/Pudding/]   
 
