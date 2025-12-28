@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Game | Jelly + Player</title>
+  <link rel="stylesheet" href="./game.css" />
+  <!-- 라이브러리: Pixi v7 / Matter.js / gif.js -->
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@7/dist/pixi.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+</head>
+<body>
+  <a href="../index.html" class="back">← back</a>
+
+  <!-- 숨겨진 파일 입력 -->
+  <input id="fileInput" type="file" accept="image/*" hidden />
+
+  <!-- 상단 버튼 -->
+  <div class="controls">
+    <button id="btnUpload"  class="btn">업로드</button>
+    <button id="btnDownload" class="btn" disabled>다운로드</button>
+    <button id="btnStore" class="btn" disabled>저장소</button>
+    <button id="btnBgToggle" class="btn">배경전환</button>
+     <button id="btnDino" class="btn">게임</button>
+
+  </div>
+
+  <div class="wrap">
+    <div class="row">
+      <section class="panel">
+        <h3 class="panel-title">① Jelly (자동 물리)</h3>
+        <div id="leftMount" class="mount"></div>
+        <p class="hint">이미지 업로드 후 통통 튐</p>
+      </section>
+
+      <section class="panel">
+        <h3 class="panel-title">② Player (배경 + 방향키/점프)</h3>
+        <div id="rightMount" class="mount"></div>
+        <p class="hint">← → 이동, ↑/Space 점프</p>
+      </section>
+    </div>
+  </div>
+
+  <!-- 레코더 옵션 모달 -->
+<div id="recModal" class="modal hidden">
+  <div class="modal-card">
+    <h4>레코더 옵션</h4>
+
+    <div class="opt-group">
+      <div class="label">녹화</div>
+      <div class="row-buttons">
+        <button id="optSideLeft"  class="btn toggle">왼쪽</button>
+        <button id="optSideRight" class="btn toggle">오른쪽</button>
+      </div>
+    </div>
+
+    <div class="opt-group">
+      <div class="label">배경</div>
+      <p class="hint">투명은 크로마키(#00FF00)로 저장돼요. 5초 동안 움직여주세요.</p>
+      <div class="row-buttons">
+        <button id="optBgWhite"  class="btn toggle selected">배경</button>
+        <button id="optBgChroma" class="btn toggle">투명</button>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button id="recCancel" class="btn outline">취소</button>
+      <button id="recStart"  class="btn" disabled>시작</button>
+    </div>
+  </div>
+</div>
+
+<!-- 녹화 중 빨간 점 -->
+<div id="recDot" class="rec-dot hidden" aria-label="recording"></div>
+
+<script type="module" src="./main.js"></script>
+
+</body>
+</html>

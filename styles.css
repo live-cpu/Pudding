@@ -1,0 +1,95 @@
+:root{
+  --accent:#DDFF00;        /* 요구한 연초록 */
+  --ink:#111;
+  --bg:#0e0e0e;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family: ui-rounded, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+  background:
+    linear-gradient(180deg, var(--accent) 0%, #e9ff7a 40%, #f6f8f2 100%);
+}
+
+.landing{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:48px 24px 64px;
+  gap:24px;
+}
+
+/* 거대한 타이틀 */
+.interactive-title {
+  font-family: 'Bagel Fat One', cursive; /* ✅ 폰트 적용 */
+  font-weight: 400; /* Bagel Fat One은 굵기 옵션 없음 */
+  letter-spacing: .04em;
+  line-height: 1;
+  text-align: center;
+  margin: 0;
+  /* 크기 반응형 */
+  font-size: clamp(48px, 12vw, 160px);
+  /* 말캉한 느낌: 둥근 외곽 + 미묘한 블러 */
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,.2));
+  cursor: default;
+  user-select: none;
+  display: inline-block;
+}
+
+/* 글자별로 효과 주기 (JS가 <span>으로 쪼갬) */
+.interactive-title .ch{
+  display:inline-block;
+  transform-origin: 50% 80%;
+  transition: transform .18s ease-out, filter .18s ease-out;
+}
+
+/* 호버 시 “푸딩” 스프링 애니메이션 */
+.interactive-title:hover .ch{
+  animation: jelly .8s cubic-bezier(.22,1.4,.36,1) var(--delay,0s);
+}
+
+/* 손가락 따라 미세 흔들림 */
+.interactive-title[data-hover="1"] .ch.is-near{
+  transform: translateY(-3px) scale(1.04);
+  filter: blur(.2px);
+}
+
+/* 스프링 키프레임 (말캉) */
+@keyframes jelly{
+  0%   {transform: scale(1,1)}
+  15%  {transform: scale(1.15,.85)}
+  32%  {transform: scale(.92,1.12)}
+  50%  {transform: scale(1.06,.96)}
+  70%  {transform: scale(.98,1.02)}
+  100% {transform: scale(1,1)}
+}
+
+/* 네비게이션 */
+.landing-nav{
+  display:flex; gap:20px; align-items:center; justify-content:center;
+}
+.nav-link{
+  font-weight:800;
+  text-decoration:none;
+  color:#222;
+  background:#111;
+  color:#fff;
+  padding:8px 16px;
+  border-radius:999px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.nav-link:hover{ transform: translateY(-2px); box-shadow:0 10px 22px rgba(0,0,0,.28);}
+.nav-link.muted{ background: #5c5c5c; pointer-events:none; opacity:.6; }
+
+.credit{
+  position:fixed; left:0; right:0; bottom:0;
+  text-align:center; font-size:12px; color:#444;
+  background: rgba(0,0,0,.06);
+  padding:8px 10px;
+}
