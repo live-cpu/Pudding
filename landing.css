@@ -1,0 +1,245 @@
+/* 랜딩 전용 CSS (공통 style.css 로는 불러오지 않음) */
+
+.landing {
+  position: relative;
+  z-index: 1;              /* wave-canvas 위에 */
+  min-height: 100vh;       /* 화면 전체 높이 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 중앙 배치 */
+  text-align: center;
+  gap: 24px;               /* 요소 간격 */
+}
+
+
+/* 거대한 타이틀 */
+.interactive-title {
+  font-family: 'Bagel Fat One', cursive;
+  font-weight: 400;
+  letter-spacing: .04em;
+  line-height: 1;
+  text-align: center;
+  margin: 0;
+  font-size: clamp(48px, 12vw, 160px);
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,.2));
+  cursor: default;
+  user-select: none;
+  display: inline-block;
+}
+
+/* 글자별 효과 */
+.interactive-title .ch {
+  display:inline-block;
+  transform-origin: 50% 80%;
+  transition: transform .18s ease-out, filter .18s ease-out;
+}
+
+.interactive-title:hover .ch {
+  animation: jelly .8s cubic-bezier(.22,1.4,.36,1) var(--delay,0s);
+}
+
+.interactive-title[data-hover="1"] .ch.is-near {
+  transform: translateY(-3px) scale(1.04);
+  filter: blur(.2px);
+}
+
+@keyframes jelly {
+  0%   {transform: scale(1,1)}
+  15%  {transform: scale(1.15,.85)}
+  32%  {transform: scale(.92,1.12)}
+  50%  {transform: scale(1.06,.96)}
+  70%  {transform: scale(.98,1.02)}
+  100% {transform: scale(1,1)}
+}
+
+/* 랜딩 페이지 네비 버튼 */
+.landing-nav {
+  display:flex; gap:20px; align-items:center; justify-content:center;
+}
+
+.nav-link {
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight:800;
+  text-decoration:none;
+  color:#fff;
+  background:#111;
+  padding:8px 16px;
+  border-radius:999px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.nav-link:hover {
+  transform: translateY(-2px);
+  box-shadow:0 10px 22px rgba(0,0,0,.28);
+}
+.nav-link.muted {
+  background: #5c5c5c; pointer-events:none; opacity:.6;
+}
+
+
+/* ===== Landing page — Sticker Theme (drop-in) ===== */
+
+/* 팔레트 & 격자 변수 */
+body.theme-sticker{
+  --st-ink:#4b2e1a; --st-line:#6b4023; --st-bg:#f7dca1; --st-paper:#fff0c9;
+  --st-aqua:#cfe9e6; --st-orange:#f6a565; --st-shadow:rgba(0,0,0,.08);
+
+  --grid-size:56px;
+  --grid-thin:rgba(107,64,35,.10);
+  --grid-bold:rgba(107,64,35,.16);
+}
+
+/* 전체 배경을 스티커 격자로 */
+body.theme-sticker{
+  color: var(--st-ink);
+  background:
+    repeating-linear-gradient(  0deg, transparent 0 calc(var(--grid-size)-1px), var(--grid-thin) calc(var(--grid-size)-1px) var(--grid-size)),
+    repeating-linear-gradient( 90deg, transparent 0 calc(var(--grid-size)-1px), var(--grid-thin) calc(var(--grid-size)-1px) var(--grid-size)),
+    repeating-linear-gradient(  0deg, transparent 0 calc(var(--grid-size)*4-2px), var(--grid-bold) calc(var(--grid-size)*4-2px) calc(var(--grid-size)*4)),
+    repeating-linear-gradient( 90deg, transparent 0 calc(var(--grid-size)*4-2px), var(--grid-bold) calc(var(--grid-size)*4-2px) calc(var(--grid-size)*4)),
+    var(--st-bg);
+}
+@media (max-width:900px){ body.theme-sticker{ --grid-size:42px; } }
+
+/* wave 캔버스는 '배경'으로 고정 */
+body.theme-sticker /* wave 캔버스는 투명한 효과 레이어 */
+#wave-canvas{
+  position: fixed;
+  inset: 0;
+  z-index: 0;                           /* body 배경(격자) 위, 콘텐츠(.landing) 아래 */
+  width: 100%;
+  height: 100%;
+  background: transparent !important;   /* ← 배경색 절대 금지 */
+  pointer-events: none;                 /* 클릭 막지 않게 */
+}
+
+body.theme-sticker .landing{ position: relative; z-index: 1; }
+
+/* 타이틀 컬러 */
+body.theme-sticker .interactive-title{ color: var(--st-ink); }
+
+/* 네비 버튼을 스티커 버튼으로 */
+body.theme-sticker .landing-nav{ gap: 14px; }
+body.theme-sticker .nav-link{
+  font-family:"Noto Sans KR", sans-serif;
+  font-weight:800; text-decoration:none; color:var(--st-ink);
+  background:#ffe7c4;
+  padding:10px 16px;
+  border:2px solid var(--st-line);
+  border-radius:14px;
+  box-shadow:0 4px 0 var(--st-line), 0 10px 12px var(--st-shadow);
+  transition: background .15s ease, transform .03s ease, color .15s ease;
+}
+body.theme-sticker .nav-link:hover{
+  background:#f5c987; color:var(--st-ink);
+  transform: translateY(-1px);
+}
+body.theme-sticker .nav-link:active{ transform: translateY(1px); }
+body.theme-sticker .nav-link.muted{
+  background:#e8d7bd; color:rgba(75,46,26,.55);
+  cursor:not-allowed; box-shadow:none; transform:none; opacity:.75;
+}
+
+/* 하단 크레딧 톤 맞추기 */
+body.theme-sticker .credit{
+  background: transparent;
+  color: rgba(75,46,26,.65);
+  text-shadow: none;
+}
+
+
+body.theme-sticker{
+  --st-bg:#f7dca1; --grid-size:56px;
+  --grid-thin: rgba(107,64,35,.10);
+  --grid-bold: rgba(107,64,35,.16);
+  background:
+    repeating-linear-gradient(0deg,  transparent 0 calc(var(--grid-size)-1px), var(--grid-thin) calc(var(--grid-size)-1px) var(--grid-size)),
+    repeating-linear-gradient(90deg, transparent 0 calc(var(--grid-size)-1px), var(--grid-thin) calc(var(--grid-size)-1px) var(--grid-size)),
+    repeating-linear-gradient(0deg,  transparent 0 calc(var(--grid-size)*4-2px), var(--grid-bold) calc(var(--grid-size)*4-2px) calc(var(--grid-size)*4)),
+    repeating-linear-gradient(90deg, transparent 0 calc(var(--grid-size)*4-2px), var(--grid-bold) calc(var(--grid-size)*4-2px) calc(var(--grid-size)*4)),
+    var(--st-bg);
+}
+
+
+/* === Sticker Grid BG — force apply on landing === */
+html.theme-sticker,
+body.theme-sticker{
+  --st-ink:#4b2e1a; --st-line:#6b4023; --st-bg:#f7dca1; --st-paper:#fff0c9;
+  --st-aqua:#cfe9e6; --st-orange:#f6a565; --st-shadow:rgba(0,0,0,.08);
+
+  --grid-size:56px;
+  --grid-thin:rgba(107,64,35,.10);
+  --grid-bold:rgba(107,64,35,.16);
+
+  color: var(--st-ink);
+  background:
+    repeating-linear-gradient(  0deg, transparent 0 calc(var(--grid-size)-1px), var(--grid-thin) calc(var(--grid-size)-1px) var(--grid-size) ),
+    repeating-linear-gradient( 90deg, transparent 0 calc(var(--grid-size)-1px), var(--grid-thin) calc(var(--grid-size)-1px) var(--grid-size) ),
+    repeating-linear-gradient(  0deg, transparent 0 calc(var(--grid-size)*4-2px), var(--grid-bold) calc(var(--grid-size)*4-2px) calc(var(--grid-size)*4) ),
+    repeating-linear-gradient( 90deg, transparent 0 calc(var(--grid-size)*4-2px), var(--grid-bold) calc(var(--grid-size)*4-2px) calc(var(--grid-size)*4) ),
+    var(--st-bg) !important;               /* ← 배경 덮어쓰기 강제 */
+}
+
+@media (max-width:900px){
+  html.theme-sticker,
+  body.theme-sticker{ --grid-size:42px; }
+}
+
+/* wave 캔버스는 투명 오버레이 (덮어쓰기 보장) */
+body.theme-sticker #wave-canvas{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+  pointer-events: none;
+}
+
+/* 콘텐츠는 캔버스 위로 */
+body.theme-sticker .landing{ position: relative; z-index: 1; }
+
+/* 버튼 톤(스티커) */
+body.theme-sticker .landing-nav{ gap: 14px; }
+body.theme-sticker .nav-link{
+  font-family:"Noto Sans KR", sans-serif;
+  font-weight:800; text-decoration:none; color:var(--st-ink);
+  background:#ffe7c4;
+  padding:10px 16px;
+  border:2px solid var(--st-line);
+  border-radius:14px;
+  box-shadow:0 4px 0 var(--st-line), 0 10px 12px var(--st-shadow);
+  transition: background .15s ease, transform .03s ease, color .15s ease;
+}
+body.theme-sticker .nav-link:hover{ background:#f5c987; color:var(--st-ink); transform: translateY(-1px); }
+body.theme-sticker .nav-link:active{ transform: translateY(1px); }
+
+/* 타이틀/크레딧 색 맞추기 */
+body.theme-sticker .interactive-title{ color: var(--st-ink); }
+body.theme-sticker .credit{ background:transparent; color:rgba(75,46,26,.65); text-shadow:none; }
+
+/* === Global Pudding Cursor ========================= */
+/* SVG 데이터 URI로 이모지 🍮를 커서 이미지로 사용 */
+:root{
+  --pudding-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext x='16' y='24' font-size='28' text-anchor='middle'%3E%F0%9F%8D%AE%3C/text%3E%3C/svg%3E");
+}
+
+/* 기본 커서: 모든 요소에 적용 (이전 cursor:none 등을 덮어쓰기 위해 !important) */
+html, body, body *{
+  cursor: var(--pudding-cursor) 8 8, auto !important; /* 8 8 = 핫스팟(정중앙 살짝 위) */
+}
+
+/* 클릭 가능한 요소들도 같은 커서 유지 (이미지가 안 뜨면 pointer로 폴백) */
+a, button, .btn, [role="button"], label, input[type="button"], input[type="submit"]{
+  cursor: var(--pudding-cursor) 8 8, pointer !important;
+}
+
+/* 텍스트 입력창은 I-beam 유지(원하면 주석 처리) */
+input[type="text"], input[type="search"], input[type="password"], textarea{
+  cursor: text !important;
+}
+
+/* 드래그 핸들 등 특별한 경우 예시
+   input[type="range"]{ cursor: default !important; } */
+
